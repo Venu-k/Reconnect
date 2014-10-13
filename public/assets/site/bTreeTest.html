@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<meta name="keywords" content="JQuery, plugin, Binary tree" /> 
+<meta name="description" content="JQuery binary tree plugin" /> 
+<script type="text/javascript" src="js/wz_jsgraphics.js"></script> 
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.btree.js"></script> 
+<script type="text/javascript"> 
+var myTree;
+$(function(){
+	myTree = $("#treeDiv").btree({
+		branchColor: $("#color").val(),
+		branchStroke: $("#stroke").val(),
+		hSpace: $("#hSpace").val(),
+		vSpace: $("#vSpace").val(),
+		borderWidth: $("#border").val(),
+		horizontal: false,
+		flip: true
+	})[0];
+});
+</script> 
+
+<style type="text/css"> 
+body{
+	font-family: arial;
+}
+ 
+</style> 
+</head> 
+<body> 
+
+<!--
+
+<div id="treeDiv" style="overflow: hidden; height: 10px; border-style: solid; border-width: 3px; border-color: #000000;"> 
+	<div style="border-style: inset;" id="box1"> 
+		<span>Box1</span> 
+	</div> 
+	<div style="border-style: inset;"> 
+		<span>Box2</span> 
+	</div> 
+	<div style="border-style: inset;"> 
+		<span>Box3</span> 
+	</div> 
+	<div style="border-style: inset;"> 
+		<span>Box4</span> 
+	</div> 
+	<div style="border-style: inset;"> 
+		<span>Box5</span> 
+	</div> 
+	<div style="border-style: inset;"> 
+		<span>Box6</span> 
+	</div> 
+	<div style="border-style: inset;"> 
+		<span>Box7</span> 
+	</div> 
+</div>
+
+--> 
+
+</body> 
+</html> 
