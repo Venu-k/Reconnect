@@ -44,7 +44,26 @@ class RegistrationController extends \BaseController {
 		if($validator->passes())
 		{
 			$placementid = IR::GenerateIrId(Input::get('ddlDistrict'));					
-			
+			/*$irid = IR::create(
+					array(
+						'name' => Input::get('tbName'),
+						'fathername' => Input::get('tbFather_HusbandName'),
+						'address1' => Input::get('tbAddress1'),
+						'address2' => Input::get('tbAddress2'),
+						'city' => Input::get('tbTown_City'),
+						'district' => Input::get('ddlDistrict'),
+						'state' => Input::get('ddlState'),
+						'country' => 1,
+						'postalcode' => Input::get('tbPostalCode'),
+						'phone_home' => Input::get('tbResidenceNo'),
+						'phone_mobile' => Input::get('tbMobile'),
+						'emailaddress' => Input::get('tbEmail'),
+						'start_date' => date('Y-m-d'),
+						'display_irid' => $placementid,
+						'placementid' => $placementid,
+						'proposal_number' => Input::get('tbProposalNumber')
+					)
+				)->id;*/
 			try {
 					DB::transaction(function($placementid) use ($placementid)
 					{	
@@ -144,24 +163,10 @@ class RegistrationController extends \BaseController {
 								->withInput();
 				
 			}
-
-			/*
-			* Send registration confirm E mail
-			*/
-			$data = array('userName'=>$placementid,
-				'password'=>Input::get('tbPassword'),
-				'name'=>Input::get('tbName'),
-				'email' =>Input::get('tbEmail')
-				);
 			
-			Mail::send('emails.welcome', $data, function($message) use ($data)
-			{
-			  $message->to($data['email'], $data['name'])
-			          ->subject('Welcome To reconncet.co.in');
-			});
+			
 
-			return View::make('public.Confirmation')
-					->with('data',$data);
+			return 'Registration is done successfully, Please check your registered mail id.';
 
 		}	
 

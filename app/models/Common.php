@@ -199,10 +199,6 @@ class Common extends \Eloquent {
 		return $districtOpt;
 	}
 
-	
-
-	
-
 
 
 
