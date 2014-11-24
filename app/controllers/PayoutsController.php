@@ -1,43 +1,46 @@
 <?php
 
-class MemberController extends \BaseController {
-
-
-	/**
-	 * Display a listing of the resource.
-	 * GET /membersearch
-	 *
-	 * @return Response
-	 */
-	public function membersearch()
-	{	
-			$name = Input::get('tbName')? Input::get('tbName') : false; 			
-			$memberId = Input::get('tbMemberID')? Input::get('tbMemberID') : false; 
-			$startDate = Input::get('tbStartDate')? Input::get('tbStartDate') : false; 
-			$policyDetails = Common::memberSearch($name,$memberId,$startDate);
-			return View::make('user.membersearch')
-	        	->with('policyDetails',$policyDetails)
-	        	->with('inputs',Input::all());
-		
-	}
-
-
-
+class PayoutsController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
-	 * GET /member
+	 * GET /payouts
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		//
+
+		
+		if (Input::has('ddlWeek')) {
+
+			$weekID = Input::get('ddlWeek');
+			
+			$payouts = Transactions::SelectBalancesForAWeekForPayments($weekID);
+			
+			if($payouts)
+			{			
+				return View::make('admin.Payouts')
+						->with('message',"")
+						->with('payouts',$payouts)
+						->with('inputs',Input::all());
+			}
+			else
+			{
+				return View::make('admin.Payouts')
+						->with('message',"Sorry, we couldn't find that IR in your network.");				
+
+			}
+		}
+		else {
+			return View::make('admin.Payouts')
+						->with('message',"");
+		}
 	}
 
 	/**
 	 * Show the form for creating a new resource.
-	 * GET /member/create
+	 * GET /payouts/create
 	 *
 	 * @return Response
 	 */
@@ -48,7 +51,7 @@ class MemberController extends \BaseController {
 
 	/**
 	 * Store a newly created resource in storage.
-	 * POST /member
+	 * POST /payouts
 	 *
 	 * @return Response
 	 */
@@ -59,7 +62,7 @@ class MemberController extends \BaseController {
 
 	/**
 	 * Display the specified resource.
-	 * GET /member/{id}
+	 * GET /payouts/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -71,7 +74,7 @@ class MemberController extends \BaseController {
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * GET /member/{id}/edit
+	 * GET /payouts/{id}/edit
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -83,7 +86,7 @@ class MemberController extends \BaseController {
 
 	/**
 	 * Update the specified resource in storage.
-	 * PUT /member/{id}
+	 * PUT /payouts/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -95,7 +98,7 @@ class MemberController extends \BaseController {
 
 	/**
 	 * Remove the specified resource from storage.
-	 * DELETE /member/{id}
+	 * DELETE /payouts/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response

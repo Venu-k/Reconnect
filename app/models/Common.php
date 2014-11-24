@@ -333,6 +333,25 @@ class Common extends \Eloquent {
 	}
 
 
+	public static function memberSearch($name,$memberId,$startDate){
+		$selectStatement = DB::table('ir');
+							
+		if($name)																
+			$selectStatement = $selectStatement->where('name','LIKE','%'.$name.'%');
+		if($memberId)			
+			$selectStatement = $selectStatement->where('display_irid','LIKE','%'.$memberId.'%');
+		if($startDate)
+			$selectStatement =  $selectStatement->where('start_date','>=',$startDate);		
+		
+		$selectStatement = $selectStatement->paginate(25);
+		if ($selectStatement) {
+			return $selectStatement;
+		}
+		else{
+			return false;
+		}
+
+	}
 
 
 	public static function Search($name,$memberId,$startDate,$endDate){
@@ -421,6 +440,76 @@ class Common extends \Eloquent {
 							}
 
     }
+
+
+
+
+
+
+    public static function getGeneology($irid)
+	{			
+		$lChild = '';
+		$rChild = '';
+		$llChild = '';
+		$lrChild = '';
+		$rlChild = '';
+		$rrChild = '';
+		$root = IR::GetRootIdByIrId($irid);
+		if($root != '') {
+			$rootID = $root[0]->display_irid;
+			$rootName = $root[0]->name;			
+		} else {
+			$rootID = '';
+			$rootName = '';
+		}		
+
+		$childs = IR::GetChildIrId($irid);			
+		if ($childs) 
+		{					
+			$lChild = $childs[0]->left_ir_id;
+			$rChild = $childs[0]->right_ir_id;				
+			$leftChilds = IR::GetChildIrId($lChild);
+			$rightChilds = IR::GetChildIrId($rChild);
+
+			if($leftChilds)
+			{
+				$llChild = $leftChilds[0]->left_ir_id;
+				$lrChild = $leftChilds[0]->right_ir_id;
+				
+			}
+
+			if($rightChilds)
+			{
+				$rlChild = $rightChilds[0]->left_ir_id;
+				$rrChild = $rightChilds[0]->right_ir_id;
+
+			}
+			
+		}
+							
+			
+		$btreeIds = array(					
+			'parent' => $irid,
+			'lChild' => $lChild,
+			'rChild' => $rChild,
+			'llChild' => $llChild,
+			'lrChild' => $lrChild,
+			'rlChild' => $rlChild,
+			'rrChild' => $rrChild );
+		
+
+		foreach ($btreeIds as $key => $value) {
+			$bTreedata[$key] = IR::getBTreeData($value);
+		}
+
+		if($bTreedata)
+		{					
+			$bTreedata = array_add($bTreedata, 'rootID', $rootID);
+			$bTreedata = array_add($bTreedata, 'rootName', $rootName);
+			return $bTreedata;
+		}
+			
+	}
 
     
 }

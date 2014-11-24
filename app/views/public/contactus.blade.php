@@ -32,7 +32,7 @@
     <div class="divMainGridHeading">
     Contact Us
     </div>
-    {{ Form::open(array('url' => 'public/contactus','id' => 'formMaster','method'=>'POST')) }}
+    {{ Form::open(array('id' => 'formMaster','method'=>'POST')) }}
     <table class="tblForm">
     <tr>
     <td style="text-align:right;">
@@ -49,7 +49,7 @@
     Your email address:
     </td>
     <td>
-     {{ Form::text('txtEmail',null,array('required' => 'true')) }}
+     {{ Form::email('txtEmail',null,array('required' => 'true')) }}
     </td>
     </tr>
     
@@ -68,7 +68,7 @@
     </td>
     <td>
       {{ Form::submit('Submit',array('id' => 'btnSubmit',)) }}
-      {{ Form::submit('Cancel',array('id' => 'btnCancel',)) }}
+      {{ Form::button('Cancel',array('id' => 'btnCancel','onclick' =>'location.href="../default"')) }} 
       {{ Form::close() }}
    
     </td>

@@ -32,6 +32,28 @@ Route::get('/default', function()
 });
 
 
+Route::post('public/contactus', function() {
+	$data = array('userName' => Input::get('txtName'),'Email' => Input::get('txtEmail'), 'comments' => Input::get('txtComments') );
+    $fromEmail = Input::get('txtEmail');
+    $fromName = Input::get('txtName');
+    $subject = 'Contact us request';
+    $toEmail = 'venuk1286@gmail.com';
+    $toName = 'Company Manager';
+
+    Mail::send('venuk1286@gmail.com');
+
+   /* Mail::send('emails.contact', $data, function($message) use ($toEmail, $toName, $fromEmail, $fromName, $subject)
+    {
+        $message->to($toEmail, $toName);
+
+        $message->from($fromEmail, $fromName);
+
+        $message->subject($subject );
+    });*/
+
+});
+
+
 /*
 |*******************
 | Admin pages
@@ -59,20 +81,27 @@ Route::get('/admin/login', function()
 
 Route::group(array('before' => 'adminAuth'), function()
 {
+	Route::resource('/admin/Network/Geneology','AdminGeneologyController');
+	Route::resource('/admin/Network/Payouts','PayoutsController');
 
 	Route::get('/admin/Members/Member/{irid}','AdminMemberController@getMemberProfile');
 	Route::post('/admin/Members/Member/{irid}','AdminMemberController@updateMemberProfile');
 	Route::get('/admin/Members/membersearch','AdminMemberController@membersearch');
 	Route::get('/admin/Members/TransactionsNew','AdminMemberController@TransactionsNew');
 	Route::get('/admin/Members/TransactionsPending','AdminMemberController@TransactionsPending');
-	Route::get('/admin/Members/PolicySearch','AdminMemberController@PolicySearch');
+	Route::get('/admin/Members/PolicySearch','AdminMemberController@PolicySearch');	
 	
-	Route::get('/admin/Network/Geneology','AdminNetworkController@Geneology');
 	Route::get('/admin/Network/GeneologyByDate','AdminNetworkController@GeneologyByDate');
 	Route::get('/admin/Network/GeneologyUV','AdminNetworkController@GeneologyUV');
-	Route::get('/admin/Network/IRPerformance','AdminNetworkController@IRPerformance');
-	Route::get('/admin/Network/Performance','AdminNetworkController@Performance');
-	Route::get('/admin/Network/Payouts','AdminNetworkController@Payouts');
+
+	Route::get('/admin/Network/IRPerformance','AdminNetworkController@get_IRPerformance');
+	//Route::post('/admin/Network/IRPerformance','AdminNetworkController@post_IRPerformance');
+
+	Route::get('/admin/Network/Performance','AdminNetworkController@get_Performance');
+	//Route::post('/admin/Network/Performance','AdminNetworkController@post_Performance');
+
+	
+	//Route::get('/admin/Network/Payouts','AdminNetworkController@Payouts');
 	Route::get('/admin/Network/SpecialIncentives','AdminNetworkController@SpecialIncentives');
 	Route::get('/admin/Network/Reports','AdminNetworkController@Reports');
 
@@ -87,6 +116,20 @@ Route::group(array('before' => 'adminAuth'), function()
 	{
 		Session::flush();
 		return Redirect::to('admin');
+	});
+	
+	Route::post('/admin/Network/weeks',function(){
+	    if(Request::ajax()){
+	    	$year = Input::get('year');
+	    	$weeks = Common::getWeeks($year);
+	    	foreach ($weeks as $week)
+			{	
+				$start_date = date('d/m/Y',strtotime($week->start_date));
+				$end_date = date('d/m/Y',strtotime($week->end_date));				    
+			    $weeksOpt[$week->week_id] = $week->week_number." ( ".$start_date." - ".$end_date." ) ";
+			}
+			return $weeksOpt;
+	    }
 	});
 	
 
@@ -116,6 +159,8 @@ Route::post('public/districts',function(){
     }
 
 });
+
+
 
 /*
 | Validate Introducer Id route
@@ -234,12 +279,19 @@ Route::group(array('before' => 'userAuth'), function()
 	| Geneology Pages on Get 
 	*/
 
-	Route::get('/user/geneology','GeneologyController@geneology');
+	Route::resource('/user/geneology','GeneologyController');
 
+	/*Route::get('/user/geneology/{irid}','GeneologyController@geneology');
+	Route::post('/user/geneology','GeneologyController@getGeneology');
+	Route::get('/user/geneology',function()
+	{
+		return View::make('user.geneology')
+							->with('message',"");
+	});*/
 
 	Route::get('/user/GeneologyByDate','GeneologyController@GeneologyByDate');
 	Route::get('/user/GeneologyUV','GeneologyController@GeneologyUV');
-
+	
 
 
 	/*
@@ -266,7 +318,6 @@ Route::group(array('before' => 'userAuth'), function()
 			return $weeksOpt;
 	    }
 	});
-
 
 	Route::resource('/user/{url}','UserController');
 });

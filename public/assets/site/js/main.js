@@ -1,7 +1,5 @@
 $( document ).ready(function() {
 
-
-
 	/*On change year get weeks*/
       	$( "#ddlYear" ).change(function() {
 		  var year = $('#ddlYear').val();
@@ -11,6 +9,19 @@ $( document ).ready(function() {
 				$.each( data, function( key, value ) {
 
 				  $( "#ddlWeek" ).append(new Option(value, key));
+				});
+			});
+		});
+
+	/*On change Tp Year get weeks*/
+      	$( "#ddlYear1" ).change(function() {
+		  var year = $('#ddlYear1').val();
+      	  $.post( "weeks",{ year: year }, function( data ) {
+				
+				$( "#ddlWeek1" ).empty();
+				$.each( data, function( key, value ) {
+
+				  $( "#ddlWeek1" ).append(new Option(value, key));
 				});
 			});
 		});

@@ -8,11 +8,12 @@ class GeneologyController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function geneology(){
 
-		if (Input::all()) {
+	
 
-			$searchKey = Input::all();
+	/*public function geneology($irid){
+
+			$searchKey = $irid;
 			$userId = Session::get('userId');			
 			$irid = IR::GetIrIdByDisplayId($searchKey);					
 			$root = IR::GetRootIdByIrId($irid);
@@ -103,14 +104,8 @@ class GeneologyController extends \BaseController {
 							->with('message',"Sorry, we couldn't find that IR in your network.");
 
 			}
-		}
-		else
-		{
-			return View::make('user.geneology')
-							->with('message',"");
-
-		}
-	}
+		
+	}*/
 
 	/**
 	 * Display a listing of the resource.
@@ -138,17 +133,6 @@ class GeneologyController extends \BaseController {
 			/*
 			$list = array();
 			IR::getChildElements($irid,$list);*/
-
-						
-					
-
-						
-
-			
-			
-
-
-
 
 			/*if($childIRIDs = DB::table('network')
 							->join('ir', 'ir.id', '=', 'network.ir_id')
@@ -261,8 +245,9 @@ class GeneologyController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index(){
-		//
+	public function index(){		
+		return View::make('user.geneology')
+					->with('message',"");
 	}
 
 	/**
@@ -283,8 +268,9 @@ class GeneologyController extends \BaseController {
 	 * @return Response
 	 */
 	public function store()
-	{
-		//
+	{		
+		$irid = Input::get('irid');
+		return Redirect::to('user/geneology/'.$irid);
 	}
 
 	/**
@@ -296,7 +282,25 @@ class GeneologyController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+
+		$searchKey = $id;
+		$userId = Session::get('userId');			
+		$irid = IR::GetIrIdByDisplayId($searchKey);	
+		if($irid >= $userId)
+		{		
+			
+			$bTreedata = Common::getGeneology($irid);			
+			return View::make('user.geneology')
+						->with('message',"")
+						->with('bTreedata',$bTreedata);
+		}
+		else
+		{
+			return View::make('user.geneology')
+						->with('message',"Sorry, we couldn't find that IR in your network.");				
+
+		}					
+			
 	}
 
 	/**
@@ -308,7 +312,7 @@ class GeneologyController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		//		
 	}
 
 	/**

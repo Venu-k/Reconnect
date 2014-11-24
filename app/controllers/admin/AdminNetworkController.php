@@ -4,12 +4,6 @@ class AdminNetworkController extends \BaseController {
 
 
 
-
-	public function Geneology(){
-		
-		return View::make('admin.Geneology');		
-	}
-
 	public function GeneologyByDate(){
 
 		return View::make('admin.GeneologyByDate');
@@ -22,28 +16,102 @@ class AdminNetworkController extends \BaseController {
 
 	}
 
-	public function IRPerformance(){
+	public function get_IRPerformance(){
+		if (Input::has('irid')) {
+			$searchID = Input::get('irid');
+			$irid = IR::GetIrIdByDisplayId($searchID);
+			if ($irid) {
+				$IRPerformance = Transactions::SelectPerformanceOfAnIR($irid);
+			}
+			else {
+				$IRPerformance = false;
+			}
 
-		return View::make('admin.IRPerformance');
+			if($IRPerformance)
+			{
+			//dd($performance);			
+			return View::make('admin.IRPerformance')
+						->with('message',"")
+						->with('IRPerformance',$IRPerformance)
+						->with('inputs',Input::all());
+			}
+			else
+			{
+				return View::make('admin.IRPerformance')
+						->with('message',"Sorry, we couldn't find that IR in your network.");				
+
+			}
+		}
+		else {
+			return View::make('admin.IRPerformance')
+					->with('message',"");
+		}
 
 	}
 
-	public function Performance(){
 
-		return View::make('admin.Payouts');
+	public function get_Performance(){
+
+		if (Input::has('ddlWeek')) {
+			$weekID = Input::get('ddlWeek');
+			$weeks = Common::getWeekDates($weekID);
+			if ($weeks) {
+				$performance = Transactions::SelectTransactionsForAWeek($weeks);
+			}
+			else {
+				$performance = false;
+			}
+
+			if($performance)
+			{			
+				return View::make('admin.Performance')
+						->with('message',"")
+						->with('performance',$performance)
+						->with('inputs',Input::all());
+			}
+			else
+			{
+				return View::make('admin.Performance')
+						->with('message',"Sorry, we couldn't find that IR in your network.");				
+
+			}
+		}
+		else {
+			return View::make('admin.Performance')
+						->with('message',"");
+		}
+		
 
 	}
 
-	public function Payouts(){
-
-		return View::make('admin.Payouts');
-
-	}
+	
 
 
 	public function SpecialIncentives(){
 
-		return View::make('admin.SpecialIncentives');
+		if (Input::has('ddlWeek')) {
+			$start_week_id = Input::get('ddlWeek');
+			$end_week_id = Input::get('ddlWeek1');
+			$incentives = Payment::GetSpecialIncentivesDetails($start_week_id, $end_week_id);
+			
+			if($incentives)
+			{			
+				return View::make('admin.SpecialIncentives')
+						->with('message',"")
+						->with('incentives',$incentives)
+						->with('inputs',Input::all());
+			}
+			else
+			{
+				return View::make('admin.SpecialIncentives')
+						->with('message',"Sorry, we couldn't find that IR in your network.");				
+
+			}
+		}
+		else {
+			return View::make('admin.SpecialIncentives')
+						->with('message',"");
+		}
 
 	}
 

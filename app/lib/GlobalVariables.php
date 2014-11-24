@@ -1,4 +1,5 @@
 <?php
+setlocale(LC_MONETARY, 'en_IN');
 Class GlobalVariables {
 	public static function getStatus($status) {
 		switch ($status) {	
@@ -30,4 +31,8 @@ Class GlobalVariables {
 				break;
 		}
 	}
+
+	
+
+	
 }

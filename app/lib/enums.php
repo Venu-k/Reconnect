@@ -14,4 +14,8 @@ Class Enums {
 			echo 'oneTime';
 		}
 	}
+	public static function displayDate($date) {
+		return date('d-m-Y',strtotime($date));
+	}
+
 }

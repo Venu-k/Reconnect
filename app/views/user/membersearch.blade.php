@@ -36,46 +36,53 @@
         <div class="divMainGridHeading">
             Members
         </div>
-        <table class="divGrid" cellspacing="0" rules="all" border="1" id="mainBody_grid1" style="border-collapse:collapse;">
-            <tbody>
+        @if($policyDetails)
+           <table class="divGrid" cellspacing="0" rules="all" border="1" id="mainBody_grid1" style="border-collapse:collapse;">
+               <tbody>
+                 <tr>
+                   <th scope="col">Member ID</th>
+                   <th scope="col">Name</th>
+                   <th scope="col">Join Date</th>
+                   <th scope="col">Email</th>
+                   <th scope="col">Cell Phone</th>
+                   <th scope="col">Home Phone</th>
+                 </tr>
+                 <?php $i=0?>
+                 @foreach ($policyDetails as $policy)
+                 <?php if($i%2 == 0){
+                    echo "<tr class='alternate'>";
+                   }
+                   else
+                   {
+                     echo "<tr>";
+                   }
+                   ?>
+                     <td>{{ $policy->display_irid }}</td>
+                     <td>{{ $policy->name }}</td>
+                     <td>{{ $policy->start_date }}</td>
+                     <td>{{ $policy->emailaddress }}</td>
+                     <td>{{ $policy->phone_mobile }}</td>
+                     <td>{{ $policy->phone_home }}</td>
+                   </tr>
+                   <?php $i++ ?>
+                 @endforeach
+               @if($inputs)
+                   {{ $policyDetails->appends($inputs)->links(); }}
+               @else
+                   {{ $policyDetails->links(); }}
+               @endif
+               </tbody>
+           </table>
+        @else
+            <table class="divGrid" cellspacing="0" rules="all" border="1" id="mainBody_grid1" style="border-collapse:collapse;">
+              <tbody>
               <tr>
-                <th scope="col">Member ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Join Date</th>
-                <th scope="col">Email</th>
-                <th scope="col">Cell Phone</th>
-                <th scope="col">Home Phone</th>
+                <td colspan="6">No records found</td>
               </tr>
-              <?php $i=0?>
-              @foreach ($policyDetails as $policy)
-              <?php if($i%2 == 0){
-                 echo "<tr class='alternate'>";
-                }
-                else
-                {
-                  echo "<tr>";
-                }
-                ?>
-                  <td>{{ $policy->display_irid }}</td>
-                  <td>{{ $policy->name }}</td>
-                  <td>{{ $policy->start_date }}</td>
-                  <td>{{ $policy->emailaddress }}</td>
-                  <td>{{ $policy->phone_mobile }}</td>
-                  <td>{{ $policy->phone_home }}</td>
-                </tr>
-                <?php $i++ ?>
-              @endforeach
-             
-              @if($inputParameter)           
-
-              {{ $policyDetails->appends(array($inputParameter => $inputValue))->links(); }}
-              @else
-              {{ $policyDetails->links(); }}
-              @endif
-              
-                
             </tbody>
-        </table>         
+            </table>
+        @endif
+                
       </div>
     </div>
 @stop
